@@ -1,5 +1,5 @@
 ---
-title: "Filtering the NBA's Top-20 Scorers with Vue.js"
+title: "Filtering the NBA's Top Ten Scorers with Vue.js"
 output: html_document
 ---
 
@@ -26,13 +26,13 @@ cat(
 ```{r, results='asis', echo=FALSE, message=FALSE}
 players <- NBAPerGameStatistics(season = 2020)
 
-top_twenty_players <- players %>%
-  top_n(20, pts) %>% 
+top_ten_players <- players %>%
+  top_n(10, pts) %>% 
   arrange(desc(pts))
 
-json_players <- toJSON(top_twenty_players, pretty=TRUE)
+json_players <- toJSON(top_ten_players, pretty=TRUE)
 
-cat("<script> var topTwenty=",
+cat("<script> var topTen=",
     json_players,
     "</script>")
 ```
@@ -118,7 +118,7 @@ cat("<script> var topTwenty=",
 var vue = new Vue({
     el: '#app',
     data: {
-      players: topTwenty,
+      players: topTen,
       minAgeRange: null,
       maxAgeRange: null,
       selectedDivision: '',
@@ -132,8 +132,8 @@ var vue = new Vue({
         southWest: ['DAL', 'HOU', 'MEM', 'NOP', 'SAS']
       },
       slider: {
-        min: topTwenty.reduce((prev, curr) => prev.age < curr.age ? prev : curr).age,
-        max: topTwenty.reduce((prev, curr) => prev.age > curr.age ? prev : curr).age
+        min: topTen.reduce((prev, curr) => prev.age < curr.age ? prev : curr).age,
+        max: topTen.reduce((prev, curr) => prev.age > curr.age ? prev : curr).age
       } 
     },
   methods: {
